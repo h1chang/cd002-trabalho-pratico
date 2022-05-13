@@ -1,4 +1,4 @@
-#Análise geral da base de dados (sumarização, histogramas, correlações, etc)
+#AnÃ¡lise geral da base de dados (sumarizaÃ§Ã£o, histogramas, correlaÃ§Ãµes, etc)
 
 #instala pacotes necessarios (psych para usar funcao describe)
 install.packages("psych")
@@ -9,33 +9,39 @@ library(readr)
 library(psych)
 #library(tidyverse)
 library(ggplot2)
+library('fastDummies')
+library(NbClust)
+library(factoextra)
+library(dplyr)
+library(stringr)
+library(dendextend)
 
 #leitura da base
-spotify <- read.csv("data/Spotify 2010 - 2019 Top 100.csv",stringsAsFactors=TRUE)
+spotify <- read.csv("data/Spotify 2010 - 2019 Top 100.csv",stringsAsFactors=TRUE, encoding = 'UTF-8')
 
 #exploracao da base
 View(spotify)
 str(spotify)
 
-#sumarizacao das variáveis numéricas
+#sumarizacao das variÃ¡veis numÃ©ricas
 #summary(spotify)
 #mean | standard deviation | min | max | range | standard error
 describe(spotify[ , c('dnce', 'nrgy', 'dB', 'spch', 'acous', 'live', 'bpm', 'dur', 'pop')], fast=TRUE)
 
 
-#Histogramas das variáveis numéricas
-ggplot(data = spotify, aes(x = dnce)) + geom_histogram() + ggtitle('Dançabilidade - Quão fácil é dançar a música')
-ggplot(data = spotify, aes(x = nrgy)) + geom_histogram() + ggtitle('Energia - Quão energética é a música')
-ggplot(data = spotify, aes(x = dB)) + geom_histogram() + ggtitle('Decibel - Quão alta é a música')
-ggplot(data = spotify, aes(x = spch)) + geom_histogram() + ggtitle('Cantado - Quão a música é focada na palavra falada')
-ggplot(data = spotify, aes(x = acous)) + geom_histogram() + ggtitle('Acústica - Quão acústica é a música')
-ggplot(data = spotify, aes(x = live)) + geom_histogram() + ggtitle('Ao Vivo - O quanto se parece com uma gravação ao vivo')
-ggplot(data = spotify, aes(x = bpm)) + geom_histogram() + ggtitle('Beats Per Minute - Ritmo da música')
-ggplot(data = spotify, aes(x = dur)) + geom_histogram() + ggtitle('Duração da música em segundos')
-ggplot(data = spotify, aes(x = pop)) + geom_histogram() + ggtitle('Popularidade da música (não é um ranking)')
+#Histogramas das variÃ¡veis numÃ©ricas
+ggplot(data = spotify, aes(x = dnce)) + geom_histogram() + ggtitle('DanÃ§abilidade - QuÃ£o fÃ¡cil Ã© danÃ§ar a mÃºsica')
+ggplot(data = spotify, aes(x = nrgy)) + geom_histogram() + ggtitle('Energia - QuÃ£o energÃ©tica Ã© a mÃºsica')
+ggplot(data = spotify, aes(x = dB)) + geom_histogram() + ggtitle('Decibel - QuÃ£o alta Ã© a mÃºsica')
+ggplot(data = spotify, aes(x = spch)) + geom_histogram() + ggtitle('Cantado - QuÃ£o a mÃºsica Ã© focada na palavra falada')
+ggplot(data = spotify, aes(x = acous)) + geom_histogram() + ggtitle('AcÃºstica - QuÃ£o acÃºstica Ã© a mÃºsica')
+ggplot(data = spotify, aes(x = live)) + geom_histogram() + ggtitle('Ao Vivo - O quanto se parece com uma gravaÃ§Ã£o ao vivo')
+ggplot(data = spotify, aes(x = bpm)) + geom_histogram() + ggtitle('Beats Per Minute - Ritmo da mÃºsica')
+ggplot(data = spotify, aes(x = dur)) + geom_histogram() + ggtitle('DuraÃ§Ã£o da mÃºsica em segundos')
+ggplot(data = spotify, aes(x = pop)) + geom_histogram() + ggtitle('Popularidade da mÃºsica (nÃ£o Ã© um ranking)')
 
-# EXEMPLO DE  MULTIPLOS MINI HISTOGRAM COM BASE EM UMA VARIÁVEL CATEGÓRICA
-#ggplot(data = txhousing, aes(x = median)) + geom_histogram() + ggtitle('Preço Mediano das Vendas')+facet_wrap(~city)
+# EXEMPLO DE  MULTIPLOS MINI HISTOGRAM COM BASE EM UMA VARIÃVEL CATEGÃ“RICA
+#ggplot(data = txhousing, aes(x = median)) + geom_histogram() + ggtitle('PreÃ§o Mediano das Vendas')+facet_wrap(~city)
 
 spotify1 <- spotify[, c('dnce', 'nrgy', 'dB', 'spch', 'acous', 'live', 'bpm', 'dur', 'pop')]
 
