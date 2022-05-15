@@ -40,6 +40,7 @@ spotify <- spotify %>%
 
 barplot(table(spotify$new.genre))
 spotify_genre2 <- as.data.frame(table(spotify$new.genre))
+utils::View(table(spotify$new.genre))
 
 ########################################################
 
@@ -48,7 +49,7 @@ spotify_genre2 <- as.data.frame(table(spotify$new.genre))
 # "bpm", "nrgy", "dnce", "val", "acous", "live", "spch", "dB"
 # "nrgy", "dnce", "dB"
 
-spotify1 <- spotify[, c("nrgy", "dnce", "dB")]
+spotify1 <- spotify[, c("bpm", "nrgy", "dnce", "dB", "spch")]
 summary(spotify1)
 
 
@@ -61,6 +62,7 @@ distance <- get_dist(spotify1)
 fviz_dist(distance, 
           gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07"))
 
+?fviz_dist
 #
 # Usando o K-means
 #
@@ -98,11 +100,22 @@ spotify_kmi50 <- kmeans(spotify1, centers=50, nstart = 10)
 p3 <- fviz_cluster(spotify_kmi3, geom = "point", data = spotify1) + ggtitle("k = 3")
 p5 <- fviz_cluster(spotify_kmi5, geom = "point",  data = spotify1) + ggtitle("k = 5")
 p10 <- fviz_cluster(spotify_kmi10, geom = "point",  data = spotify1) + ggtitle("k = 10")
-p20 <- fviz_cluster(spotify_kmi20, geom = "point",  data = spotify1) + ggtitle("k = 20")
-p50 <- fviz_cluster(spotify_kmi50, geom = "point",  data = spotify1) + ggtitle("k = 50")
+fviz_cluster(spotify_kmi10, geom = "point",  data = spotify1) + ggtitle("k = 10")
+#p20 <- fviz_cluster(spotify_kmi20, geom = "point",  data = spotify1) + ggtitle("k = 20")
+#p50 <- fviz_cluster(spotify_kmi50, geom = "point",  data = spotify1) + ggtitle("k = 50")
 
 library(gridExtra)
-grid.arrange(p1, p5, p10, p20, p50, nrow = 2)
+grid.arrange(p3, p5, p10, nrow = 1)
+
+
+plot(spotify1, col=spotify_kmi3$cluster, 
+     main = paste("k-means clustering com 3 grupos; Total do SSE = ",spotify_kmi1$tot.withinss))
+
+plot(spotify1, col=spotify_kmi5$cluster, 
+              main = paste("k-means clustering com 5 grupos; Total do SSE = ",spotify_kmi1$tot.withinss))
+
+plot(spotify1, col=spotify_kmi10$cluster, 
+              main = paste("k-means clustering com 10 grupos"))
 
 #comparando as matrizes de contingencia e relacinando com os SSE dos clusters
 table(spotify$top.genre, spotify_kmi3$cluster)
@@ -111,18 +124,32 @@ table(spotify$top.genre, spotify_kmi10$cluster)
 table(spotify$top.genre, spotify_kmi20$cluster)
 table(spotify$top.genre, spotify_kmi50$cluster)
 
+table(spotify$artist.type, spotify_kmi3$cluster)
+table(spotify$artist.type, spotify_kmi5$cluster)
+table(spotify$artist.type, spotify_kmi10$cluster)
+table(spotify$artist.type, spotify_kmi20$cluster)
+table(spotify$artist.type, spotify_kmi50$cluster)
+
+
+
 table(spotify$new.genre, spotify_kmi3$cluster)
 table(spotify$new.genre, spotify_kmi5$cluster)
 table(spotify$new.genre, spotify_kmi10$cluster)
 table(spotify$new.genre, spotify_kmi20$cluster)
 table(spotify$new.genre, spotify_kmi50$cluster)
 
+table(spotify$artist.type, spotify_kmi3$cluster)
+table(spotify$artist.type, spotify_kmi5$cluster)
+table(spotify$artist.type, spotify_kmi10$cluster)
+table(spotify$artist.type, spotify_kmi20$cluster)
+table(spotify$artist.type, spotify_kmi50$cluster)
+
 spotify_kmi3$withinss
 spotify_kmi3$tot.withinss
 
 # Elbow method
 set.seed(123)
-fviz_nbclust(spotify1 , kmeans, method = "wss", k.max=50)
+fviz_nbclust(spotify1 , kmeans, method = "wss", k.max=25)
 ?fviz_nbclust
 
 
